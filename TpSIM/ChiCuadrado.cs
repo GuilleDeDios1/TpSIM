@@ -14,12 +14,12 @@ namespace TpSIM
     internal class ChiCuadrado
     {
         private int distribucion;
-        private List<float> datos;
+        private float[] datos;
         private float alfa;
         private int k;
         private int tamañoMuesta;
 
-        public ChiCuadrado(int distribucion, List<float> datos, float alfa, int k, int tamañoMuesta)
+        public ChiCuadrado(int distribucion, float[] datos, float alfa, int k, int tamañoMuesta)
         {
             this.distribucion = distribucion;
             this.datos = datos;
@@ -42,7 +42,7 @@ namespace TpSIM
            
             for (int i = 0; i < k; i++)
             {
-                matriz[i] = new float[k];
+                matriz[i] = new float[5];
             }
 
             // Llenar tabla. Columnas [desde][hasta][Fo][Pe][Fe(Pe.N)]
@@ -51,27 +51,27 @@ namespace TpSIM
             {
                 for (int j = 0; j < matriz[i].Length; j++) // recorre columnas
                 {
+                    // Consulta que sea desde y que ya paso por [0][0] y lo llena con el valor hasta de la fila anterior.
+                    if (j == 0 && primeraVez) // j = 0 => desde
+                    {
+                        matriz[i][j] = matriz[i - 1][1];
+                    }
                     // Consulta si es el primer valor y lo setea con el minimo.
                     if (i == 0 && j == 0) // j = 0 => desde
                     {
                         matriz[i][j] = minimo;
                         primeraVez = true;
                     }
-                    // Consulta que sea desde y que ya paso por [0][0] y lo llena con el valor hasta de la fila anterior.
-                    if (j == 0 && primeraVez) // j = 0 => desde
-                    {
-                        matriz[i][j] = matriz[i - 1][1];
-                    }
                     // Pregunta si es la segunda columna (hasta)
-                    if (j==1) // j = 1 => hasta
+                    if (j == 1) // j = 1 => hasta
                     {
                         matriz[i][j] = (matriz[i][j - 1]) + tamañoIntervalo;
                     }
                     // Pregunta si es la columna (fo) y recorre los datos reguntando si esta en el intervalo.
-                    if (j==2) // j = 2 => Frecuencia Observada (fo).
+                    if (j == 2) // j = 2 => Frecuencia Observada (fo).
                     {
                         int fo = 0;
-                        for (int d = 0; d < this.datos.Count; d++ )
+                        for (int d = 0; d < this.datos.Length; d++)
                         {
                             if (datos[d] >= matriz[i][0] && datos[d] < matriz[i][1])
                             {
@@ -85,7 +85,7 @@ namespace TpSIM
                     {
                         if (distribucion == 0)
                         {
-                            matriz[i][j] = (1/k); // Probabilidad de distribucion uniforme.
+                            matriz[i][j] = (1 / k); // Probabilidad de distribucion uniforme.
                         }
                         if (distribucion == 1)
                         {
@@ -103,13 +103,21 @@ namespace TpSIM
                             matriz[i][j] = (float)(distribucion.CumulativeDistribution(matriz[i][1]) - distribucion.CumulativeDistribution(matriz[i][0])); // Probabilidad de distribucion normal.
                         }
                     }
-                    if(j == 4) // j = 4 => Frecuencia Esperada (fe).
+                    if (j == 4) // j = 4 => Frecuencia Esperada (fe).
                     {
-                        matriz[i][j] = matriz[i][j - 1]*tamañoMuesta; // Calculo de la frecuencia esperada. Probabilidad*tamaño.
+                        matriz[i][j] = matriz[i][j - 1] * tamañoMuesta; // Calculo de la frecuencia esperada. Probabilidad*tamaño.
                     }
                 }
             }
             
+            for (int i = 0; i < matriz.Length; i++)
+            {
+                for(int j = 0; j < matriz[i].Length; j++)
+                {
+                    Console.WriteLine(matriz[i][j]);
+                }
+            }
+
             return true;
         }
 

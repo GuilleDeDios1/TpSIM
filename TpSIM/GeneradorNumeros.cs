@@ -22,7 +22,7 @@ namespace TpSIM
 
         private void btnNormal_Click(object sender, EventArgs e)
         {
-            new FrmNormal().ShowDialog(); 
+            new FrmNormal().ShowDialog();
         }
 
         private void GeneradorNumeros_Load(object sender, EventArgs e)
