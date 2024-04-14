@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TpSIM.Generadores
 {
@@ -72,12 +73,29 @@ namespace TpSIM.Generadores
         }
 
         private void btnGenerar_Click(object sender, EventArgs e)
-        {
+        {   
+            // validar núemro de mmuestra
+
             if (Convert.ToInt64(this.txtTamañoMuestra.Text.ToString()) > 1000000)
             {
                 MessageBox.Show("Debe ingresar una muestra inferior a 1.000.000", "Error");
                 return;
             }
+
+            //guardar valor de muestra, desviación y media
+
+            int cantidad = int.Parse(txtTamañoMuestra.Text);
+            
+            int desviacion = int.Parse(txtHasta.Text);
+           
+            int media = int.Parse(txtDesde.Text);
+           
+
+            FrmNormalBoxM ventana1BM = new FrmNormalBoxM(cantidad, desviacion, media);
+            ventana1BM.Show();
+
+           
+
         }
     }
 }
